@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}ISSA Security{% endblock %}</title>
+
+  <!-- Bootstrap 4 -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg-primary:    #0d1117;
+      --bg-secondary:  #161b22;
+      --bg-tertiary:   #21262d;
+      --border-color:  #30363d;
+      --text-primary:  #e6edf3;
+      --text-muted:    #7d8590;
+      --accent:        #f0a500;
+      --accent-dim:    #f0a50022;
+      --danger:        #da3633;
+      --success:       #238636;
+      --sidebar-width: 240px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      font-family: 'IBM Plex Sans', sans-serif;
+      background-color: var(--bg-primary);
+      color: var(--text-primary);
+      min-height: 100vh;
+      margin: 0;
+    }
+
+    /* ── Sidebar ── */
+    .sidebar {
+      position: fixed;
+      top: 0; left: 0;
+      width: var(--sidebar-width);
+      height: 100vh;
+      background-color: var(--bg-secondary);
+      border-right: 1px solid var(--border-color);
+      display: flex;
+      flex-direction: column;
+      z-index: 100;
+    }
+
+    .sidebar-brand {
+      padding: 1.5rem 1.25rem;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .sidebar-brand .brand-name {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--accent);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .sidebar-brand .brand-sub {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .sidebar-nav {
+      flex: 1;
+      padding: 1rem 0;
+      overflow-y: auto;
+    }
+
+    .nav-section-label {
+      font-size: 0.65rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 0.75rem 1.25rem 0.35rem;
+    }
+
+    .sidebar-nav .nav-link {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      padding: 0.55rem 1.25rem;
+      color: var(--text-muted);
+      font-size: 0.875rem;
+      font-weight: 400;
+      border-left: 3px solid transparent;
+      transition: all 0.15s ease;
+      text-decoration: none;
+    }
+
+    .sidebar-nav .nav-link:hover {
+      color: var(--text-primary);
+      background-color: var(--bg-tertiary);
+      border-left-color: var(--border-color);
+    }
+
+    .sidebar-nav .nav-link.active {
+      color: var(--accent);
+      background-color: var(--accent-dim);
+      border-left-color: var(--accent);
+      font-weight: 500;
+    }
+
+    .sidebar-nav .nav-link i {
+      width: 16px;
+      text-align: center;
+      font-size: 0.8rem;
+    }
+
+    .sidebar-footer {
+      padding: 1rem 1.25rem;
+      border-top: 1px solid var(--border-color);
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    /* ── Main content ── */
+    .main-wrapper {
+      margin-left: var(--sidebar-width);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .topbar {
+      background-color: var(--bg-secondary);
+      border-bottom: 1px solid var(--border-color);
+      padding: 0.75rem 1.75rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 99;
+    }
+
+    .topbar-title {
+      font-size: 0.95rem;
+      font-weight: 500;
+      color: var(--text-primary);
+      margin: 0;
+    }
+
+    .topbar-meta {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      font-family: 'IBM Plex Mono', monospace;
+    }
+
+    .content {
+      padding: 1.75rem;
+      flex: 1;
+    }
+
+    /* ── Cards & Tables ── */
+    .card {
+      background-color: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+    }
+
+    .card-header {
+      background-color: var(--bg-tertiary);
+      border-bottom: 1px solid var(--border-color);
+      padding: 0.85rem 1.25rem;
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: var(--text-primary);
+    }
+
+    .table {
+      color: var(--text-primary);
+      margin-bottom: 0;
+      font-size: 0.875rem;
+    }
+
+    .table thead th {
+      background-color: var(--bg-tertiary);
+      border-bottom: 1px solid var(--border-color);
+      border-top: none;
+      color: var(--text-muted);
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 0.75rem 1rem;
+    }
+
+    .table td {
+      border-top: 1px solid var(--border-color);
+      padding: 0.75rem 1rem;
+      vertical-align: middle;
+    }
+
+    .table tbody tr:hover {
+      background-color: var(--bg-tertiary);
+    }
+
+    /* ── Badges ── */
+    .badge-category {
+      display: inline-block;
+      padding: 0.2em 0.55em;
+      font-size: 0.7rem;
+      font-weight: 500;
+      font-family: 'IBM Plex Mono', monospace;
+      background-color: var(--bg-tertiary);
+      color: var(--text-muted);
+      border: 1px solid var(--border-color);
+      border-radius: 3px;
+      margin: 1px;
+    }
+
+    /* ── Pagination ── */
+    .pagination .page-link {
+      background-color: var(--bg-secondary);
+      border-color: var(--border-color);
+      color: var(--text-muted);
+      font-size: 0.8rem;
+      font-family: 'IBM Plex Mono', monospace;
+    }
+
+    .pagination .page-link:hover {
+      background-color: var(--bg-tertiary);
+      border-color: var(--border-color);
+      color: var(--text-primary);
+    }
+
+    .pagination .page-item.active .page-link {
+      background-color: var(--accent);
+      border-color: var(--accent);
+      color: #000;
+      font-weight: 600;
+    }
+
+    .pagination .page-item.disabled .page-link {
+      background-color: var(--bg-secondary);
+      border-color: var(--border-color);
+      color: var(--border-color);
+    }
+
+    /* ── Alerts ── */
+    .alert {
+      border-radius: 4px;
+      font-size: 0.875rem;
+      border: 1px solid;
+    }
+
+    .alert-info {
+      background-color: #1f3a4d;
+      border-color: #1a6086;
+      color: #79c0ff;
+    }
+
+    /* ── Misc ── */
+    .mono {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.8rem;
+    }
+
+    .text-accent { color: var(--accent); }
+    .text-muted-custom { color: var(--text-muted); }
+
+    /* ── Messages ── */
+    .messages-container {
+      padding: 0 1.75rem;
+      padding-top: 1rem;
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 768px) {
+      .sidebar { transform: translateX(-100%); }
+      .main-wrapper { margin-left: 0; }
+    }
+  </style>
+
+  {% block extra_css %}{% endblock %}
+</head>
+<body>
+
+  <!-- Sidebar -->
+  <nav class="sidebar">
+    <div class="sidebar-brand">
+      <div class="brand-name">ISSA</div>
+      <div class="brand-sub">Security Management</div>
+    </div>
+    <div class="sidebar-nav">
+      <div class="nav-section-label">Reports</div>
+      <a href="{% url 'incidents:incident-reports' %}" class="nav-link {% block nav_incident_reports %}{% endblock %}">
+        <i class="fas fa-file-alt"></i> Incident Reports
+      </a>
+
+      <div class="nav-section-label">Admin</div>
+      <a href="{% url 'admin:index' %}" class="nav-link">
+        <i class="fas fa-cog"></i> Django Admin
+      </a>
+    </div>
+    <div class="sidebar-footer">
+      {% if request.user.is_authenticated %}
+        <i class="fas fa-user-circle mr-1"></i> {{ request.user.get_full_name|default:request.user.username }}
+      {% endif %}
+    </div>
+  </nav>
+
+  <!-- Main -->
+  <div class="main-wrapper">
+    <div class="topbar">
+      <h1 class="topbar-title">{% block topbar_title %}Dashboard{% endblock %}</h1>
+      <span class="topbar-meta">{% block topbar_meta %}{% endblock %}</span>
+    </div>
+
+    {% if messages %}
+      <div class="messages-container">
+        {% for message in messages %}
+          <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="close" data-dismiss="alert">
+              <span>&times;</span>
+            </button>
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    <div class="content">
+      {% block content %}{% endblock %}
+    </div>
+  </div>
+
+  <!-- Bootstrap 4 JS -->
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+  {% block extra_js %}{% endblock %}
+</body>
+</html>
